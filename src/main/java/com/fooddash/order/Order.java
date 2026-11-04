@@ -104,6 +104,10 @@ public class Order {
     this.status = OrderStatus.PAID;
   }
 
+  void assignRider(Rider rider) {
+    this.rider = rider;
+  }
+
   void markCancelled() {
     this.status = OrderStatus.CANCELLED;
   }

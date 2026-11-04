@@ -10,6 +10,7 @@ import com.fooddash.payment.PaymentResult;
 import com.fooddash.restaurant.Restaurant;
 import com.fooddash.restaurant.RestaurantClosedException;
 import com.fooddash.restaurant.RestaurantService;
+import com.fooddash.rider.Rider;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.Map;
@@ -18,7 +19,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/** The order rules: placing, reading and cancelling orders. */
+/** The order rules: placing, reading, cancelling and assigning orders. */
 @Service
 public class OrderService {
 
@@ -121,6 +122,23 @@ public class OrderService {
       case PLACED -> {}
     }
     order.markCancelled();
+    return order;
+  }
+
+  /** Gives the order to this rider, unless another rider already took it. */
+  @Transactional
+  public Order assignRider(UUID orderId, Rider rider) {
+    Order order = detailed(orderId);
+    if (order.getStatus() == OrderStatus.CANCELLED || order.getStatus() == OrderStatus.DELIVERED) {
+      throw OrderNotAssignableException.finished(orderId, order.getStatus());
+    }
+    if (order.getRider() != null) {
+      if (order.getRider().getId().equals(rider.getId())) {
+        return order;
+      }
+      throw OrderNotAssignableException.alreadyTaken(orderId);
+    }
+    order.assignRider(rider);
     return order;
   }
 
