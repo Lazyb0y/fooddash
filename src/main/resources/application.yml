@@ -12,3 +12,14 @@ spring:
       ddl-auto: none # Flyway owns the schema
     properties:
       hibernate.jdbc.time_zone: UTC
+  mvc:
+    problemdetails:
+      enabled: true
+
+server:
+  error:
+    include-stacktrace: never
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html

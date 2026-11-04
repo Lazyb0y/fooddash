@@ -9,3 +9,4 @@ All notable changes to FoodDash are documented here. The format follows [Keep a 
 - CI on every pull request (title check, secret scan, build) and weekly Dependabot updates.
 - Google Java Style, checked by Spotless in every build.
 - MySQL schema and demo data through Flyway migrations.
+- One RFC 9457 Problem Details error shape for the whole API; OpenAPI documentation at `/swagger-ui.html`.
