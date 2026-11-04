@@ -23,3 +23,12 @@ server:
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
+
+fooddash:
+  payment:
+    provider: ${PAYMENT_PROVIDER:fake} # fake | wallet
+  wallet:
+    base-url: ${WALLET_BASE_URL:https://wallet.example/api}
+    api-key: ${WALLET_API_KEY:}
+  demo:
+    customer-id: c0000000-0000-4000-8000-000000000001 # until sign-in (Class 10)

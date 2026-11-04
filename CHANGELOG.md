@@ -12,3 +12,4 @@ All notable changes to FoodDash are documented here. The format follows [Keep a 
 - One RFC 9457 Problem Details error shape for the whole API; OpenAPI documentation at `/swagger-ui.html`.
 - List restaurants a page at a time with a cursor (`GET /api/v1/restaurants`), and a home page.
 - A restaurant's menu (`GET /api/v1/restaurants/{id}/menu`), and a menu page.
+- Place and pay for an order with an `Idempotency-Key` (`POST /api/v1/orders`); read your own order (`GET /api/v1/orders/{id}`).
