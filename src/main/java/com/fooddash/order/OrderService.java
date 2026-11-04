@@ -67,7 +67,7 @@ public class OrderService {
       if (!earlier.get().sameRequest(fingerprint)) {
         throw new IdempotencyKeyReusedException();
       }
-      return detailed(earlier.get().getOrder().getPublicId());
+      return loadOrder(earlier.get().getOrder().getPublicId());
     }
 
     Restaurant restaurant = restaurantService.get(request.restaurantId());
@@ -128,7 +128,7 @@ public class OrderService {
   /** Gives the order to this rider, unless another rider already took it. */
   @Transactional
   public Order assignRider(UUID orderId, Rider rider) {
-    Order order = detailed(orderId);
+    Order order = loadOrder(orderId);
     if (order.getStatus() == OrderStatus.CANCELLED || order.getStatus() == OrderStatus.DELIVERED) {
       throw OrderNotAssignableException.finished(orderId, order.getStatus());
     }
@@ -142,15 +142,15 @@ public class OrderService {
     return order;
   }
 
+  private Order loadOrder(UUID id) {
+    return orders.findDetailedByPublicId(id).orElseThrow(() -> new OrderNotFoundException(id));
+  }
+
   private Order ownOrder(UUID id) {
     Customer me = currentCustomer.get();
     return orders
         .findDetailedByPublicId(id)
         .filter(order -> order.getCustomer().getId().equals(me.getId()))
         .orElseThrow(() -> new OrderNotFoundException(id));
-  }
-
-  private Order detailed(UUID id) {
-    return orders.findDetailedByPublicId(id).orElseThrow(() -> new OrderNotFoundException(id));
   }
 }
