@@ -35,3 +35,7 @@ FoodDash is run like a real product, with one honest exception: it has a **singl
 ## Class demos
 
 Live class demos work on throwaway `live/class-NN-<section>` branches and are cleaned up after each class. The tags `class-NN-start` and `class-NN-end` are fixed snapshots used in class; they never move.
+
+## AI tools
+
+AI coding agents working in this repository follow [AGENTS.md](AGENTS.md). Whatever tools you use, you are responsible for the changes you submit, and the pull-request template asks you to say how you used them.

@@ -101,7 +101,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md). Course he
 
 ## AI use
 
-No AI-generated code is merged without the maintainer reading and being able to explain every line.
+No AI-generated code is merged without the maintainer reading and being able to explain every line. AI coding agents working here follow [AGENTS.md](AGENTS.md).
 
 ## Licence
 
