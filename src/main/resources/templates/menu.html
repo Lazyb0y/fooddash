@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${menu.restaurantName()} + ' · FoodDash'">Menu · FoodDash</title>
+  <link rel="stylesheet" th:href="@{/css/fooddash.css}">
+</head>
+<body>
+<header>
+  <p><a th:href="@{/}">FoodDash</a></p>
+  <h1 th:text="${menu.restaurantName()}">Restaurant</h1>
+  <p class="status" th:text="${menu.open()} ? 'Open now' : 'Closed now'">Open now</p>
+</header>
+<main>
+  <h2>Menu</h2>
+  <table>
+    <thead>
+    <tr><th scope="col">Item</th><th scope="col">Price (৳)</th><th scope="col">Available</th></tr>
+    </thead>
+    <tbody>
+    <tr th:each="item : ${menu.items()}">
+      <td th:text="${item.name()}">Item</td>
+      <td th:text="${item.price()}">0.00</td>
+      <td th:text="${item.available()} ? 'Yes' : 'No'">Yes</td>
+    </tr>
+    </tbody>
+  </table>
+</main>
+</body>
+</html>
