@@ -49,4 +49,13 @@ class OrderController {
   OrderResponse get(@PathVariable UUID id) {
     return OrderResponse.from(orderService.get(id));
   }
+
+  @PostMapping("/api/v1/orders/{id}/cancel")
+  @Operation(summary = "Cancel an order before a rider picks it up")
+  @ApiResponse(responseCode = "200", description = "Order cancelled")
+  @ApiResponse(responseCode = "404", description = "No such order for this customer")
+  @ApiResponse(responseCode = "409", description = "Already picked up")
+  OrderResponse cancel(@PathVariable UUID id) {
+    return OrderResponse.from(orderService.cancel(id));
+  }
 }

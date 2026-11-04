@@ -31,6 +31,8 @@ class OrderApiTest {
   static final String KACCHI = "e0000000-0000-4000-8000-000000000001";
   static final String FIRNI_UNAVAILABLE = "e0000000-0000-4000-8000-000000000004";
   static final String OTHER_CUSTOMERS_ORDER = "44444444-4444-4444-8444-444444444444";
+  static final String PLACED_ORDER = "11111111-1111-4111-8111-111111111111";
+  static final String PICKED_UP_ORDER = "22222222-2222-4222-8222-222222222222";
 
   @Autowired MockMvc mvc;
 
@@ -140,5 +142,25 @@ class OrderApiTest {
     mvc.perform(get("/api/v1/orders/" + OTHER_CUSTOMERS_ORDER))
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.title").value("Order not found"));
+  }
+
+  @Test
+  void cancelBeforePickup_returnsTheCancelledOrder() throws Exception {
+    mvc.perform(post("/api/v1/orders/" + PLACED_ORDER + "/cancel"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.status").value("CANCELLED"));
+  }
+
+  @Test
+  void cancelAfterPickup_returns409() throws Exception {
+    mvc.perform(post("/api/v1/orders/" + PICKED_UP_ORDER + "/cancel"))
+        .andExpect(status().isConflict())
+        .andExpect(jsonPath("$.type").value("https://fooddash.example/problems/order-picked-up"));
+  }
+
+  @Test
+  void cancelAnotherCustomersOrder_looksNotFound() throws Exception {
+    mvc.perform(post("/api/v1/orders/" + OTHER_CUSTOMERS_ORDER + "/cancel"))
+        .andExpect(status().isNotFound());
   }
 }
