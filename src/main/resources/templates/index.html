@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FoodDash</title>
+  <link rel="stylesheet" th:href="@{/css/fooddash.css}">
+</head>
+<body>
+<header>
+  <h1>FoodDash</h1>
+  <p>Food from Dhaka's restaurants, delivered.</p>
+</header>
+<main>
+  <h2>Restaurants</h2>
+  <ul class="restaurants">
+    <li th:each="restaurant : ${restaurants}">
+      <a th:href="@{/restaurants/{id}(id=${restaurant.id()})}" th:text="${restaurant.name()}">Restaurant</a>
+      <span class="area" th:text="${restaurant.area()}">Area</span>
+      <span class="status" th:text="${restaurant.open()} ? 'Open' : 'Closed'">Open</span>
+    </li>
+  </ul>
+  <p><a th:href="@{/swagger-ui.html}">API documentation (Swagger UI)</a></p>
+</main>
+</body>
+</html>
