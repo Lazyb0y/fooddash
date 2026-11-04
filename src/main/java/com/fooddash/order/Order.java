@@ -104,6 +104,10 @@ public class Order {
     this.status = OrderStatus.PAID;
   }
 
+  void markCancelled() {
+    this.status = OrderStatus.CANCELLED;
+  }
+
   public Long getId() {
     return id;
   }

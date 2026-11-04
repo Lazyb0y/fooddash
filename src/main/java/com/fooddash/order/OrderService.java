@@ -18,7 +18,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/** The order rules: placing and reading orders. */
+/** The order rules: placing, reading and cancelling orders. */
 @Service
 public class OrderService {
 
@@ -106,6 +106,22 @@ public class OrderService {
   @Transactional(readOnly = true)
   public Order get(UUID id) {
     return ownOrder(id);
+  }
+
+  /** Cancels an order before a rider picks it up, refunding it if it was paid. */
+  @Transactional
+  public Order cancel(UUID id) {
+    Order order = ownOrder(id);
+    switch (order.getStatus()) {
+      case CANCELLED -> {
+        return order;
+      }
+      case PICKED_UP, DELIVERED -> throw new OrderAlreadyPickedUpException(id);
+      case PAID -> paymentGateway.refund(order.getPublicId(), order.getTotal());
+      case PLACED -> {}
+    }
+    order.markCancelled();
+    return order;
   }
 
   private Order ownOrder(UUID id) {

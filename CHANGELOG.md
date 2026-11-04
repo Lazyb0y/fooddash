@@ -13,3 +13,4 @@ All notable changes to FoodDash are documented here. The format follows [Keep a 
 - List restaurants a page at a time with a cursor (`GET /api/v1/restaurants`), and a home page.
 - A restaurant's menu (`GET /api/v1/restaurants/{id}/menu`), and a menu page.
 - Place and pay for an order with an `Idempotency-Key` (`POST /api/v1/orders`); read your own order (`GET /api/v1/orders/{id}`).
+- Cancellation rules in the order service: before pickup only, refunding paid orders.
