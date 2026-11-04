@@ -1,0 +1,33 @@
+name: Bug report
+description: Something in FoodDash doesn't work as documented.
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Start FoodDash at tag class-03-start
+        2. POST /api/v1/orders with …
+        3. …
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result
+      description: Include the exact response or error text.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Tag or commit
+      placeholder: class-03-start

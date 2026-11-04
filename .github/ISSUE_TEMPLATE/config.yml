@@ -1,0 +1,6 @@
+# Course help goes through a help-request issue in your own team repository.
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security vulnerability
+    url: https://github.com/Lazyb0y/fooddash/security/advisories/new
+    about: Report security problems privately, never in a public issue.

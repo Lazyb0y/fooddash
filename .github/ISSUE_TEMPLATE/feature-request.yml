@@ -1,0 +1,26 @@
+name: Feature request
+description: Suggest a new feature or an improvement to FoodDash.
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: Students, course help goes through a help-request issue in your own team repository, not here.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      description: Who has the problem, and when? A user story works well.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: How should it work?
+      description: The behaviour you expect, ideally as acceptance criteria (Given / When / Then).
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives
+      description: Optional. Other ways to solve it, and why this one is better.
