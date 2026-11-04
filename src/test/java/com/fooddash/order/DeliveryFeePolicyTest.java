@@ -18,4 +18,12 @@ class DeliveryFeePolicyTest {
   void fee_isTheSameForSmallAndLargeOrders() {
     assertEquals(policy.feeFor(new BigDecimal("100.00")), policy.feeFor(new BigDecimal("5000.00")));
   }
+
+  @Test
+  void rainyDay_addsTheSurcharge() {
+    BigDecimal subtotal = new BigDecimal("500.00");
+    assertEquals(
+        DeliveryFeePolicy.BASE_DELIVERY_FEE.add(DeliveryFeePolicy.RAIN_SURCHARGE),
+        policy.rainyDayFeeFor(subtotal));
+  }
 }
