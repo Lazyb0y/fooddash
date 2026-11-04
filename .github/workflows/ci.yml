@@ -1,0 +1,62 @@
+# CI runs on every pull request and every push to main. The three jobs are required checks on main:
+#   pr-title  the pull request title follows Conventional Commits ("feat(order): add a rain surcharge"), because
+#             squash and merge makes the title the commit on main. Only in this repository: forks used for
+#             the course drills follow the students' team convention (the Jira key first) instead.
+#   secrets   no passwords, keys or tokens in the history of the commit being checked (gitleaks).
+#             Only that history (HEAD): the review-drill branch specimen/review-01 holds a planted,
+#             fake key that students must find, and it must not fail every other pull request.
+#   build     formatting (Spotless), compile and tests (./mvnw verify)
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pr-title:
+    name: pr-title
+    if: github.event_name == 'pull_request' && github.repository == 'Lazyb0y/fooddash' && github.actor != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Title follows Conventional Commits
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          pattern='^(feat|fix|docs|test|refactor|build|ci|chore|perf|style|revert)(\([a-z0-9-]+\))?!?: [^ ].{0,71}$'
+          if [[ "$TITLE" =~ $pattern ]]; then
+            echo "Title OK: $TITLE"
+          else
+            echo "::error title=Pull request title::Use <type>(<scope>): <summary>, 72 characters or fewer, e.g. 'feat(order): add a rain surcharge to the delivery fee'. Got: '$TITLE'"
+            exit 1
+          fi
+
+  secrets:
+    name: secrets
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Scan the history for secrets (gitleaks)
+        run: docker run --rm -v "$PWD:/repo" zricethezav/gitleaks:v8.18.4 detect --source=/repo --log-opts=HEAD --redact --verbose
+
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+      - name: Format check, compile and test
+        run: ./mvnw -B -ntp verify
