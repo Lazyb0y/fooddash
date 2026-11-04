@@ -11,7 +11,7 @@ class DeliveryFeePolicyTest {
 
   @Test
   void basicOrder_paysBaseFee() {
-    assertEquals(new BigDecimal("40.00"), policy.feeFor(new BigDecimal("500.00")));
+    assertEquals(new BigDecimal("50.00"), policy.feeFor(new BigDecimal("500.00")));
   }
 
   @Test

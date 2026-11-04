@@ -57,8 +57,8 @@ class OrderApiTest {
             .andExpect(header().string("Location", startsWith("/api/v1/orders/")))
             .andExpect(jsonPath("$.status").value("PAID"))
             .andExpect(jsonPath("$.subtotal").value("700.00"))
-            .andExpect(jsonPath("$.deliveryFee").value("40.00"))
-            .andExpect(jsonPath("$.total").value("740.00"))
+            .andExpect(jsonPath("$.deliveryFee").value("50.00"))
+            .andExpect(jsonPath("$.total").value("750.00"))
             .andReturn()
             .getResponse()
             .getContentAsString();

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class DeliveryFeePolicy {
 
-  static final BigDecimal BASE_FEE = new BigDecimal("40.00");
+  static final BigDecimal BASE_FEE = new BigDecimal("50.00");
 
   /** The delivery fee for an order whose items cost this much. */
   public BigDecimal feeFor(BigDecimal subtotal) {
