@@ -1,0 +1,6 @@
+# In-memory database for the API tests and for running without MySQL (see TestFoodDashApplication).
+spring:
+  datasource:
+    url: jdbc:h2:mem:fooddash;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1
+    username: sa
+    password: ""

@@ -1,3 +1,14 @@
+# Defaults are for local development only. Real values come from environment variables (.env.example).
 spring:
   application:
     name: fooddash
+  datasource:
+    url: ${DATABASE_URL:jdbc:mysql://localhost:3306/fooddash}
+    username: ${DATABASE_USER:fooddash}
+    password: ${DATABASE_PASSWORD:fooddash}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none # Flyway owns the schema
+    properties:
+      hibernate.jdbc.time_zone: UTC
