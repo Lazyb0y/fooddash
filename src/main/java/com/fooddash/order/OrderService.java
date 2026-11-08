@@ -146,13 +146,12 @@ public class OrderService {
 
   /**
    * A restaurant's latest orders, newest first, for its staff. Until sign-in (Class 10) anyone can
-   * read them. The responses are built here, inside the transaction, because they read the customer
-   * of each order.
+   * read them. The query loads each order's customer too: one query, not one more per order.
    */
   @Transactional(readOnly = true)
   public List<RestaurantOrderResponse> latestForRestaurant(UUID restaurantId, int limit) {
     Restaurant restaurant = restaurantService.get(restaurantId);
-    return orders.findByRestaurantOrderByCreatedAtDesc(restaurant, Limit.of(limit)).stream()
+    return orders.findLatestWithCustomer(restaurant, Limit.of(limit)).stream()
         .map(RestaurantOrderResponse::from)
         .toList();
   }

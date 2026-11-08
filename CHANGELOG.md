@@ -22,3 +22,4 @@ All notable changes to FoodDash are documented here. The format follows [Keep a 
 
 ### Changed
 - Restaurant order history uses an index on restaurant and time (migration V3): 20 index rows read instead of 60,002 orders sorted.
+- Restaurant order history loads each order's customer in the same query: two queries for 20 orders instead of 22.

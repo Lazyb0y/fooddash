@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.data.domain.Limit;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 interface OrderRepository extends JpaRepository<Order, Long> {
 
@@ -14,6 +15,9 @@ interface OrderRepository extends JpaRepository<Order, Long> {
   @EntityGraph(attributePaths = {"customer", "restaurant", "rider", "items", "items.menuItem"})
   Optional<Order> findDetailedByPublicId(UUID publicId);
 
-  /** A restaurant's latest orders, newest first. */
-  List<Order> findByRestaurantOrderByCreatedAtDesc(Restaurant restaurant, Limit limit);
+  /** A restaurant's latest orders with their customers, newest first, in one query. */
+  @Query(
+      "select o from Order o join fetch o.customer where o.restaurant = :restaurant"
+          + " order by o.createdAt desc")
+  List<Order> findLatestWithCustomer(Restaurant restaurant, Limit limit);
 }
