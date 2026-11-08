@@ -19,3 +19,6 @@ All notable changes to FoodDash are documented here. The format follows [Keep a 
 - Restaurant order history for staff, newest first (`GET /api/v1/restaurants/{id}/orders`).
 - A `sql` profile that logs every SQL statement the app sends.
 - A lab database for SQL practice (`db/lab/`): 300,004 orders from January to October.
+
+### Changed
+- Restaurant order history uses an index on restaurant and time (migration V3): 20 index rows read instead of 60,002 orders sorted.
