@@ -16,3 +16,4 @@ All notable changes to FoodDash are documented here. The format follows [Keep a 
 - Cancellation rules in the order service: before pickup only, refunding paid orders.
 - Riders accept orders (`POST /api/v1/orders/{id}/assignment`); a second rider gets 409.
 - Cancel an order before pickup (`POST /api/v1/orders/{id}/cancel`).
+- Restaurant order history for staff, newest first (`GET /api/v1/restaurants/{id}/orders`).

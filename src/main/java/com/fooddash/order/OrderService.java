@@ -13,9 +13,11 @@ import com.fooddash.restaurant.RestaurantService;
 import com.fooddash.rider.Rider;
 import java.time.Clock;
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.data.domain.Limit;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -140,6 +142,19 @@ public class OrderService {
     }
     order.assignRider(rider);
     return order;
+  }
+
+  /**
+   * A restaurant's latest orders, newest first, for its staff. Until sign-in (Class 10) anyone can
+   * read them. The responses are built here, inside the transaction, because they read the customer
+   * of each order.
+   */
+  @Transactional(readOnly = true)
+  public List<RestaurantOrderResponse> latestForRestaurant(UUID restaurantId, int limit) {
+    Restaurant restaurant = restaurantService.get(restaurantId);
+    return orders.findByRestaurantOrderByCreatedAtDesc(restaurant, Limit.of(limit)).stream()
+        .map(RestaurantOrderResponse::from)
+        .toList();
   }
 
   private Order ownOrder(UUID id) {
