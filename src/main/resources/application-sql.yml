@@ -1,0 +1,5 @@
+# Turn on with the "sql" profile to see every SQL statement Hibernate sends (local development only):
+#   ./mvnw spring-boot:run "-Dspring-boot.run.profiles=sql"
+logging:
+  level:
+    org.hibernate.SQL: debug
