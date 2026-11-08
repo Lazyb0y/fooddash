@@ -130,6 +130,9 @@ public class OrderService {
   /** Gives the order to this rider, unless another rider already took it. */
   @Transactional
   public Order assignRider(UUID orderId, Rider rider) {
+    // Lock the order row first: a second rider accepting at the same moment waits here, then sees
+    // this rider and gets 409, instead of both riders being told the order is theirs.
+    orders.findForUpdateByPublicId(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
     Order order = detailed(orderId);
     if (order.getStatus() == OrderStatus.CANCELLED || order.getStatus() == OrderStatus.DELIVERED) {
       throw OrderNotAssignableException.finished(orderId, order.getStatus());
