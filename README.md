@@ -38,6 +38,8 @@ The commands below use `./mvnw`; on Windows outside Git Bash, use the wrapper fr
 
 4. Open <http://localhost:8080> for the pages and <http://localhost:8080/swagger-ui.html> for the API.
 
+To see every SQL statement the app sends, start it with the `sql` profile: `./mvnw spring-boot:run "-Dspring-boot.run.profiles=sql"`.
+
 **No MySQL at hand?** Run on an in-memory database instead: `./mvnw spring-boot:test-run "-Dspring-boot.run.profiles=h2"` (keep the quotes: PowerShell needs them). Data disappears when the app stops.
 
 ## Run the tests
@@ -55,7 +57,7 @@ com.fooddash
 ├── customer/     Customer, CurrentCustomer (a demo stub until sign-in arrives in Class 10)
 ├── restaurant/   RestaurantController, RestaurantService, RestaurantRepository, Restaurant
 ├── menu/         MenuController, MenuService, MenuItem
-├── order/        OrderController, OrderService, OrderRepository, Order, DeliveryFeePolicy
+├── order/        OrderController, RestaurantOrderController, OrderService, OrderRepository, Order
 ├── rider/        RiderController, AssignmentService, Rider
 ├── payment/      PaymentGateway (interface), MobileWalletGateway, FakePaymentGateway
 └── shared/       Problem Details error handling, configuration
@@ -82,12 +84,30 @@ The seed data (`src/main/resources/db/migration/V2__seed_demo_data.sql`) has fix
 | A paid order with no rider | `33333333-3333-4333-8333-333333333333` |
 | Riders | `aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa`, `bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb` |
 
+## Lab database (Class 5)
+
+`db/lab/` holds a bigger dataset for practising SQL, query plans and transactions: 60 restaurants, 20,002 customers, 302 riders and 300,004 orders from January to October, the same on every laptop. Loading it takes about a minute.
+
+- **For SQL practice** (no app needed), load `db/lab/fooddash-lab.sql`. It **deletes the FoodDash tables** in the database and builds them again with the demo data and the lab data. With the Docker container from step 1, run these two lines in the repository folder (password `fooddash`):
+
+  ```bash
+  docker cp db/lab/fooddash-lab.sql fooddash-mysql:/tmp/lab.sql
+  docker exec -it fooddash-mysql mysql -u fooddash -p fooddash -e "source /tmp/lab.sql"
+  ```
+
+  Without Docker: `mysql -u fooddash -p fooddash -e "source db/lab/fooddash-lab.sql"`.
+- **For the app**, start it once on an empty database (Flyway creates the tables), then load `db/lab/bulk-data.sql` the same way: it only adds the lab data. The app won't start on a database loaded from `fooddash-lab.sql`, because Flyway didn't create it; start again from an empty database (`docker rm -f fooddash-mysql`, then step 1).
+
+`fooddash-lab.sql` is generated from the two migrations and `bulk-data.sql`; don't edit it by hand.
+
 ## Class snapshots
 
 | Tag | What it holds |
 |---|---|
 | `class-03-start` | Restaurants, menus, orders with idempotency keys, rider assignment, Problem Details, OpenAPI |
 | `class-03-end` | Adds cancelling an order (`POST /api/v1/orders/{id}/cancel`) |
+| `class-05-start` | Adds restaurant order history (`GET /api/v1/restaurants/{id}/orders`), the `sql` profile and the lab database |
+| `class-05-end` | Order history with an index, in two queries instead of 22; riders' acceptance locks the order row |
 
 `git switch --detach class-03-start` gives you the state at the start of that class (`git switch main` takes you back). Live demos happen on throwaway `live/class-NN-*` branches; `main` only moves forward.
 
